@@ -106,4 +106,52 @@ We are nearing the end of the first task. To get more comfortable with featurisi
 
 For the second task, we will leverage descriptors to help us build effective ML models to predict drug biological activity. One such activity is whether a drug can cross the blood brain barrier (BBB). The BBB is a barrier that aims to prevent toxic molecules from reaching and consequently affecting our brain. It's a robust barrier and ensures our safety. However, it also prevents drugs from reaching the brain, which is a burden if you want to treat a brain-related disorder. So let's see if ML can be used to help scientists know if their drug can cross the BBB.
 
-Your task will be to convert the SMILES notation from the dataset into 200 molecular descriptors for each drug in the dataset. Once featurised, use the molecular descriptors as inputs to predict whether a drug will cross the BBB.
+Your task will be to convert the SMILES notation from the dataset into 200 molecular descriptors for each drug in the dataset. Once featurised, use the molecular descriptors as inputs to predict whether a drug will cross the BBB. It should be routine by now to make sure EDA is first performed before jumping straight into ML training. If you decide to use a tree-based learner, don't forget to output the feature importance to see which molecular descriptors are key to the learner's performance.
+
+``` python
+
+import pandas as pd
+import numpy as np
+from rdkit import Chem
+from rdkit import DataStructs
+from rdkit.Chem import AllChem
+#import rdkit.Chem 
+from rdkit.ML.Descriptors.MoleculeDescriptors import MolecularDescriptorCalculator
+from rdkit.ML.Descriptors import MoleculeDescriptors
+from rdkit.Chem import Descriptors
+
+# load excel file from directory
+data_drug = pd.read_excel('')
+
+# Select the SMILES column
+smiles = data_drug['SMILEY_Face']
+
+# Create a list
+mol_descriptors = []
+
+# Loop through every drug and calculate the molecular descriptors
+
+for i in data_drug['SMILES']: 
+    moler = Chem.MolFromSmiles(i)
+    if True:
+        try:
+            calc = MoleculeDescriptors.MolecularDescriptorCalculator([x[0] for x in Descriptors._descList])
+            vector = calc.CalcDescriptors(moler)
+            mol_descriptors.append(vector)
+        except:
+            print(i)
+
+# print list of all 200 mol descriptors
+Descriptors._descList
+
+# create an array of the 200 mol descriptors
+cols_mols = np.asarray(Descriptors._descList)
+
+desc_df = pd.DataFrame(mol_descriptors, columns = cols_mols)
+
+#print them to test they look ok
+qspr_df
+
+# Now its time to perform EDA, followed by ML training
+
+```
